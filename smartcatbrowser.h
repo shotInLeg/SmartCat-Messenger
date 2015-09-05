@@ -15,6 +15,9 @@ public:
     explicit SmartCatBrowser(QWidget *parent = 0);
     ~SmartCatBrowser();
 
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::SmartCatBrowser *ui;
 };

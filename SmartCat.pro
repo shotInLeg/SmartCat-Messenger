@@ -14,10 +14,15 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         smartcat.cpp \
-    Browser/smartcatbrowser.cpp
+    smartcatbrowser.cpp \
+    Json/json.cpp \
+    vkAPI/vkapi.cpp
+
 
 HEADERS  += smartcat.h \
-    Browser/smartcatbrowser.h
+    smartcatbrowser.h \
+    Json/json.h \
+    vkAPI/vkapi.h
 
 FORMS    += smartcat.ui \
-    Browser/smartcatbrowser.ui
+    smartcatbrowser.ui
