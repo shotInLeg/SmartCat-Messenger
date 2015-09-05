@@ -150,6 +150,7 @@ namespace vkAPI
             Message& setFromId(QString);
             Message& setFromfName(QString);
             Message& setFromlName(QString);
+            Message& setFromAvatar(QString);
 
             Message& setId(QString);
             Message& setText(QString);
@@ -187,7 +188,7 @@ namespace vkAPI
     public:
         static QMap<QString, User> users;
         static QMap<QString, Friend> friends;
-        static QMap<QString, Dialog> chats;
+        static QMap<int, Dialog> chats;
         static QMap<int, Message> history;
 
 

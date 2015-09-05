@@ -6,6 +6,7 @@ using namespace vkAPI;
 SmartCat::SmartCat(QWidget *parent) : QWidget(parent), ui(new Ui::SmartCat)
 {
     ui->setupUi(this);
+    th = new DataThread();
     ui->listWidget->hide();
 
     appID = "4796858";
@@ -19,41 +20,43 @@ SmartCat::SmartCat(QWidget *parent) : QWidget(parent), ui(new Ui::SmartCat)
         ui->stackedWidget->setCurrentWidget( ui->Auth );
         VKontakte::autenthication( appID, scope, ui->AuthBrowser );
     }
+    else
+    {
+        th->startFunction = "loadDialogsList";
+        connect( th, SIGNAL( dialogsUpdated() ), this, SLOT( printDataToDialogList() ) );
+        th->start();
+    }
 }
-
 SmartCat::~SmartCat()
 {
     delete ui;
 }
 
-void SmartCat::getToken(QUrl url)
+void SmartCat::changeCurrentWidget()
 {
-    if( VKontakte::getAccessToken(url) == 0 )
-    {
-        User user = VKontakte::currentUser();
-        QMessageBox::information(this, "Вы вошли как", "Имя: " + user.firstName() + "\nФамилия: " + user.lastName());
+    ui->stackedWidget->setCurrentIndex(1);
+}
 
-        emit authSuccess(); // Удачное получение токена
+void SmartCat::on_stackedWidget_currentChanged(int currentWidgetIndex)
+{
+    if( currentWidgetIndex == 0 ) //Settings
+    {
+    }
+    if( currentWidgetIndex == 1 ) //Main
+    {
+    }
+    if( currentWidgetIndex == 2 ) //Auth
+    {
     }
 }
 
-void SmartCat::changeCurrentWidget()
+void SmartCat::loging()
 {
-    ui->stackedWidget->setCurrentWidget( ui->MainWidget );
+    qDebug() << "UIT Stop";
 }
 
 
-void SmartCat::on_bSend_clicked()
-{
 
 
-    //SmartCatBrowser *browser1 = new SmartCatBrowser();
-    //browser1->showFullScreen();
-}
-
-void SmartCat::on_bAdd_clicked()
-{
-    ui->listWidget->show();
-}
 
 

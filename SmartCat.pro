@@ -16,7 +16,11 @@ SOURCES += main.cpp\
         smartcat.cpp \
     smartcatbrowser.cpp \
     Json/json.cpp \
-    vkAPI/vkapi.cpp
+    vkAPI/vkapi.cpp \
+    Widgets/authwidget.cpp \
+    Widgets/mainwidget.cpp \
+    Widgets/settingswidget.cpp \
+    Widgets/uithread.cpp
 
 
 HEADERS  += smartcat.h \

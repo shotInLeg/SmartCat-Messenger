@@ -16,12 +16,11 @@ using namespace vkAPI;
 //Статические переменные //
 
 QString VKontakte::access_token = "null";
-
 User VKontakte::current_user;
 
 QMap<QString, User> VKontakte::users;
 QMap<QString, Friend> VKontakte::friends;
-QMap<QString, Dialog> VKontakte::chats;
+QMap<int, Dialog> VKontakte::chats;
 QMap<int, Message> VKontakte::history;
 
 
@@ -38,15 +37,12 @@ int VKontakte::loadData(QString fileName)
     QDataStream stream(&f);
 
     parametrs.insert("access_token_vk", access_token);
-
     stream >> parametrs;
-
     f.close();
 
     if(parametrs.contains("access_token_vk"))
     {
         access_token = parametrs.value("access_token_vk").toString();
-
         if(checkAccessToken == false)
         {
             return 0x000001;
@@ -91,9 +87,7 @@ int VKontakte::saveData(QString fileName)
     parametrs.insert("avatar_vk", current_user.avatar50px());
 
     stream << parametrs;
-
     f.close();
-
     return 0;
 }
 
@@ -192,7 +186,7 @@ int VKontakte::getAccessToken(QUrl url)
 
     if(answer.isEmpty())
     {
-        qDebug() << "Пустой ответ в loadFriendsList";
+        qDebug() << "Пустой ответ в getAccessToken";
         return 0x000002;
     }
 
@@ -215,6 +209,13 @@ int VKontakte::getAccessToken(QUrl url)
                 photo50.remove(j, 1);
             }
         }
+
+        QUrl url_avatar(photo50);
+        QByteArray photo_avatar = GET(url_avatar);
+        QImage img = QImage::fromData(photo_avatar);
+        img.save("vk_avatars/"+id_user+".jpg");
+        photo50 = "vk_avatars/"+id_user+".jpg";
+
         for(int j = 0; j < photo100.size(); j++)
         {
             if(photo100.at(j) == '\\' )
@@ -225,8 +226,6 @@ int VKontakte::getAccessToken(QUrl url)
 
         current_user.setFirstName(fname).setLastName(lname).setAvatar50px(photo50);
     }
-
-
     saveData();
 
     return 0;
@@ -326,7 +325,7 @@ int VKontakte::loadDialogsList()
         {
             QVariantMap currentDialog = dialogsList[i].toMap();
 
-            QString key = QString::number(i);
+
             QString date = currentDialog.value("date").toString();
             QString id = currentDialog.value("uid").toString();
             QString state = currentDialog.value("read_state").toString();
@@ -337,6 +336,7 @@ int VKontakte::loadDialogsList()
             Dialog dialog;
             dialog.setDate(date).setId(id).setState(state).setTitle(title).setBody(body);
 
+            int key = date.toInt();
             chats[key] = dialog;
 
         }
@@ -351,7 +351,7 @@ int VKontakte::loadDialogsList()
 
         if(answer.isEmpty())
         {
-            qDebug() << "Пустой ответ в loadFriendsList";
+            qDebug() << "Пустой ответ в loadDialogList";
             return 0x000002;
         }
 
@@ -379,6 +379,13 @@ int VKontakte::loadDialogsList()
                     photo50.remove(j, 1);
                 }
             }
+
+            QUrl url_avatar(photo50);
+            QByteArray photo_avatar = GET(url_avatar);
+            QImage img = QImage::fromData(photo_avatar);
+            img.save("vk_avatars/"+id+".jpg");
+            photo50 = "vk_avatars/"+id+".jpg";
+
             User user;
             user.setId(id).setFirstName(fname).setLastName(lname).setAvatar50px(photo50).setLastSeen(lastSeen).setRelationship(relationship);
 
@@ -387,7 +394,7 @@ int VKontakte::loadDialogsList()
 
 
         // Замена title в списке диалогов //
-        QMap<QString, Dialog>::iterator itr;
+        QMap<int, Dialog>::iterator itr;
         for(itr = chats.begin(); itr != chats.end(); itr++)
         {
             Dialog dialog;
@@ -397,13 +404,7 @@ int VKontakte::loadDialogsList()
             {
                 // Имя и Фамилия записываются в название диалога //
                 dialog.setTitle(users[dialog.id()].firstName() + " " + users[dialog.id()].lastName());
-
-                // Аватар пользователя записывается как фото диалога //
-                QUrl url_avatar(users[dialog.id()].avatar50px());
-                QByteArray photo_avatar = GET(url_avatar);
-                QImage img = QImage::fromData(photo_avatar);
-                img.save("D:\\\\vk_avatars\\"+dialog.id()+".jpg");
-                dialog.setAvatar("D:\\\\vk_avatars\\"+dialog.id()+".jpg");
+                dialog.setAvatar(users[dialog.id()].avatar50px());
             }
             itr.value() = dialog;
         }
@@ -455,15 +456,20 @@ int VKontakte::loadHistory(QString idUser) // Загрузка истории п
                 lastName = current_user.lastName();
                 avatar = current_user.avatar50px();
             }
-            if(from == users[from].id())
+            else
             {
-                firstName = users[from].firstName();
-                lastName = users[from].lastName();
-                avatar = users[from].avatar50px();
+                qDebug() << from << ">" << users[from].id() << ">" << users[from].avatar50px();
+                if(from == users[from].id())
+                {
+                    firstName = users[from].firstName();
+                    lastName = users[from].lastName();
+                    avatar = users[from].avatar50px();
+                }
             }
 
+
             Message tmp;
-            tmp.setFromId(from).setFromfName(firstName).setFromlName(lastName).setText(texMsg);
+            tmp.setFromId(from).setFromfName(firstName).setFromlName(lastName).setText(texMsg).setFromAvatar(avatar);
 
             history[i] = tmp;
         }
@@ -942,6 +948,12 @@ Message& Message::setFromfName(QString fname)
 Message& Message::setFromlName(QString lname)
 {
     from_last_name = lname;
+    return *this;
+}
+
+Message &Message::setFromAvatar(QString avatar)
+{
+    from_avatar = avatar;
     return *this;
 }
 
