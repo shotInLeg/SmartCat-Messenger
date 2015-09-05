@@ -16,7 +16,9 @@ public:
     ~SmartCat();
 
 private slots:
-    void on_pushButton_2_clicked();
+    void on_bSend_clicked();
+
+    void on_bAdd_clicked();
 
 private:
     Ui::SmartCat *ui;

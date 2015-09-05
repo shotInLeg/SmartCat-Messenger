@@ -13,8 +13,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        smartcat.cpp
+        smartcat.cpp \
+    Browser/smartcatbrowser.cpp
 
-HEADERS  += smartcat.h
+HEADERS  += smartcat.h \
+    Browser/smartcatbrowser.h
 
-FORMS    += smartcat.ui
+FORMS    += smartcat.ui \
+    Browser/smartcatbrowser.ui
