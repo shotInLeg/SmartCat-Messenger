@@ -36,7 +36,7 @@ void SmartCat::printDataToMessageList()
     User selfUser = vk->currentUser();
     ui->listMessages->clear();
 
-    for(QMap<int, Message>::iterator itr = vk->history.end()-1; itr != vk->history.begin(); itr--)
+    for(QMap<int, Message>::iterator itr = vk->history.begin()+1; itr != vk->history.end(); itr++)
     {
         Message message = itr.value();
         QListWidgetItem *item_mess = new QListWidgetItem();

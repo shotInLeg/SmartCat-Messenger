@@ -42,6 +42,14 @@ QString Message::attachment() const
 {
     return message_attachment;
 }
+QString Message::date() const
+{
+    return message_date;
+}
+QString Message::state() const
+{
+    return message_state;
+}
 
 // Setters //
 Message& Message::setFrom(const User& a)
@@ -62,5 +70,16 @@ Message& Message::setText(QString text)
 Message& Message::setAttachment(QString attachment)
 {
     message_attachment = attachment;
+    return *this;
+}
+Message& Message::setDate(QString date)
+{
+    message_date = date;
+    return *this;
+}
+
+Message& Message::setState(QString state)
+{
+    message_state = state;
     return *this;
 }

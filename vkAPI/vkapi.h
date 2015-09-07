@@ -26,49 +26,48 @@
 
 namespace vkAPI
 {
-
-    // Структуры данных //
     class User
     {
-    protected:
-        QString user_id;
-        QString user_first_name;
-        QString user_last_name;
-        QString user_sex;
-        QString user_avatar_50;
-        QString user_avatar_100;
-        QString user_avatar_MAX;
-        QString user_relationship;
-        QString user_born;
-        QString user_city;
-        QString user_county;
-        QString user_home_town;
-        QString user_online;
-        QString user_school_id;
-        QString user_school_country;
-        QString user_school_city;
-        QString user_school_year_from;
-        QString user_school_year_to;
-        QString user_school_year_graduated;
-        QString user_school_class_letter;
-        QString user_university;
-        QString user_university_name;
-        QString user_university_faculty;
-        QString user_university_faculty_name;
-        QString user_university_graduation;
-        QString user_status;
-        QString user_last_seen_time;
-        QString user_last_seen_platform;
-        QString user_followers_count;
-        QString user_common_count;
-        QString user_count_albums;
-        QString user_count_videos;
-        QString user_count_audios;
-        QString user_count_photos;
-        QString user_count_friends;
-        QString user_count_groups;
-        QString user_exports;
-    public:
+        protected:
+            QString user_id;
+            QString user_first_name;
+            QString user_last_name;
+            QString user_sex;
+            QString user_avatar_50;
+            QString user_avatar_100;
+            QString user_avatar_MAX;
+            QString user_relationship;
+            QString user_born;
+            QString user_city;
+            QString user_county;
+            QString user_home_town;
+            QString user_online;
+            QString user_school_id;
+            QString user_school_country;
+            QString user_school_city;
+            QString user_school_year_from;
+            QString user_school_year_to;
+            QString user_school_year_graduated;
+            QString user_school_class_letter;
+            QString user_university;
+            QString user_university_name;
+            QString user_university_faculty;
+            QString user_university_faculty_name;
+            QString user_university_graduation;
+            QString user_status;
+            QString user_last_seen_time;
+            QString user_last_seen_platform;
+            QString user_followers_count;
+            QString user_common_count;
+            QString user_count_albums;
+            QString user_count_videos;
+            QString user_count_audios;
+            QString user_count_photos;
+            QString user_count_friends;
+            QString user_count_groups;
+            QString user_exports;
+
+        public:
             User();
             User(const User&);
             User(QString);
@@ -93,7 +92,6 @@ namespace vkAPI
             QString followersCount() const;//
             QString commonCount() const;//
 
-
             User& setId(QString);
             User& setFirstName(QString);
             User& setLastName(QString);
@@ -114,23 +112,22 @@ namespace vkAPI
             User& setFollowersCount(QString);
             User& setCommonCount(QString);//
 
-            // Перегруженные операторы //
-
             bool operator==(User &user2); // Сравнение id пользователей на равенство
             bool operator!=(User &user2); // Сравнение id пользователей на неравенство
     };
 
     class Dialog
     {
-        QString dialog_id;
-        QString dialog_title;
-        QString dialog_body;
-        QString dialog_state;
-        QString dialog_date;
-        QString dialog_avatar;
-        QList<QString> dialog_members;
+        protected:
+            QString dialog_id;
+            QString dialog_title;
+            QString dialog_body;
+            QString dialog_state;
+            QString dialog_date;
+            QString dialog_avatar;
+            QList<QString> dialog_members;
 
-    public:
+        public:
             Dialog();
             Dialog(const Dialog&);
             Dialog(const User&);
@@ -150,18 +147,19 @@ namespace vkAPI
             Dialog& setDate(QString);
             Dialog& setAvatar(QString);
             Dialog& setMembers(QList<QString>);
-
-            // Перегрузка операторов
     };
 
     class Message
     {
-        User user_from;
+        protected:
+            User user_from;
+            QString message_id;
+            QString message_text;
+            QString message_attachment;
+            QString message_date;
+            QString message_state;
 
-        QString message_id;
-        QString message_text;
-        QString message_attachment;
-    public:
+        public:
             Message();
             Message(const Message&);
             Message(const User&);
@@ -170,13 +168,57 @@ namespace vkAPI
             QString id() const;
             QString text() const;
             QString attachment() const;
-
+            QString date() const;
+            QString state() const;
 
             Message& setFrom(const User&);
             Message& setId(QString);
             Message& setText(QString);
             Message& setAttachment(QString);
+            Message& setDate(QString);
+            Message& setState(QString);
+
     };
+
+
+
+    class VKontakte
+    {
+        protected:
+            QString access_token;
+            User current_user;
+
+        public:
+            QMap<QString, User> users;
+            QMap<int, Dialog> chats;
+            QMap<int, Message> history;
+
+        protected:
+            int loadData(QString fileName = "config.txt");
+            int saveData(QString fileName = "config.txt");
+
+        public:
+            QString accessToken();
+            User& currentUser();
+
+            void setAccessToken(QString);
+            void setCurrentUser(User&);
+
+            static QByteArray GET(QUrl); // Отправка Get запросов //
+
+            // Методы API //
+
+            int autenthication(QString appID, QString scope, QWebView*); // Запуск авторизации в указанном QWebView //
+            int getAccessToken(QUrl); // Получение AccessToken из авторизации //
+            bool checkAccessToken(); // Проверка валидности AccessToken //
+            User& getUsers(QString ids_users = "null");
+          //int loadFriendsList(); // Закгрузка списка друзей //
+            int loadDialogsList(); // Загрузка списка диалогов //
+            int loadHistory(QString idDialog); // Загрузка истории переписки указанного диалога //
+            int sendMessage(QString idDialog, QString textMessage); // Отпрака сообщения //
+    };
+
+
 
     /*class LongPoll: public QThread
     {
@@ -195,60 +237,6 @@ namespace vkAPI
 
     signals:
             void finishLongPoll();
-
-    };*/
-
-    class VKontakte
-    {
-        QString access_token;
-        User current_user;
-
-    public:
-        QMap<QString, User> users;
-        QMap<int, Dialog> chats;
-        QMap<int, Message> history;
-
-
-            QString accessToken();
-            User& currentUser();
-
-            void setAccessToken(QString);
-            void setCurrentUser(User&);
-
-            // Методы API //
-
-            static QByteArray GET(QUrl); // Отправка Get запросов //
-            int autenthication(QString appID, QString scope, QWebView*); // Запуск авторизации в указанном QWebView //
-            int getAccessToken(QUrl); // Получение токена из авторизации //
-            bool checkAccessToken(); // Проверка валидности токена //
-            User& getUsers(QString ids_users = "null");
-          //int loadFriendsList(); // Закгрузка списка друзей //
-            int loadDialogsList(); // Загрузка списка диалогов //
-            int loadHistory(QString idDialog); // Загрузка истории переписки указанного диалога //
-            int sendMessage(QString idDialog, QString textMessage); // Отпрака сообщения //
-
-
-            int loadData(QString fileName = "config.txt");
-            int saveData(QString fileName = "config.txt");
-
-    };
-
-
-
-    /*class userData
-    {
-    public:
-            userData();
-
-            static QString access_token;
-            static QMap<int, Friend> friends;
-            static QMap<int, Dialog> dialogs;
-            static QMap<int, Message> history;
-            static QMap<QString,QString> longPollArray;
-
-            static int loadData(QString fileName = "settings.txt");
-            static int saveData(QString fileName = "settings.txt");
-
 
     };*/
 }
