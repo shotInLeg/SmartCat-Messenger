@@ -37,7 +37,7 @@ User::User(QString id_user)
     QVariantList usersList = parse(answer).toMap().value("response").toList();
     QVariantMap user = usersList[0].toMap();
 
-    user_id = user.value("id").toString();
+    user_id = user.value("uid").toString();
     user_first_name = user.value("first_name").toString();
     user_last_name = user.value("last_name").toString();
     user_sex = user.value("sex").toString();
@@ -49,15 +49,15 @@ User::User(QString id_user)
     user_county = user.value("country").toString();
     user_home_town = user.value("home_town").toString();
     user_online = user.value("online").toString();
-    QVariantList schools = user.value("school").toList();
-        QVariantMap school = schools[0].toMap();
-            user_school_id = school.value("id").toString();
-            user_school_country  = school.value("country").toString();
-            user_school_city = school.value("city").toString();
-            user_school_year_from = school.value("year_from").toString();
-            user_school_year_to = school.value("year_to").toString();
-            user_school_year_graduated = school.value("year_graduated").toString();
-            user_school_class_letter = school.value("class").toString();
+    //QVariantList schools = user.value("school").toList();
+        //QVariantMap school = schools[0].toMap();
+            //user_school_id = school.value("id").toString();
+            //user_school_country  = school.value("country").toString();
+            //user_school_city = school.value("city").toString();
+            //user_school_year_from = school.value("year_from").toString();
+            //user_school_year_to = school.value("year_to").toString();
+            //user_school_year_graduated = school.value("year_graduated").toString();
+            //user_school_class_letter = school.value("class").toString();
     QVariantMap education = user.value("education").toMap();
         user_university = education.value("university").toString();
         user_university_name  = education.value("university_name").toString();

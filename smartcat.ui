@@ -282,8 +282,14 @@ padding: 5px;</string>
                    <height>0</height>
                   </size>
                  </property>
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
                  <property name="horizontalScrollBarPolicy">
                   <enum>Qt::ScrollBarAlwaysOff</enum>
+                 </property>
+                 <property name="sizeAdjustPolicy">
+                  <enum>QAbstractScrollArea::AdjustToContents</enum>
                  </property>
                  <property name="selectionMode">
                   <enum>QAbstractItemView::NoSelection</enum>
@@ -296,6 +302,9 @@ padding: 5px;</string>
                    <width>25</width>
                    <height>25</height>
                   </size>
+                 </property>
+                 <property name="verticalScrollMode">
+                  <enum>QAbstractItemView::ScrollPerPixel</enum>
                  </property>
                  <property name="resizeMode">
                   <enum>QListView::Adjust</enum>

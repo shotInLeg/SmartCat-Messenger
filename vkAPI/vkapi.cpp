@@ -37,24 +37,8 @@ int VKontakte::loadData(QString fileName)
     if(parametrs.contains("access_token_vk"))
     {
         access_token = parametrs.value("access_token_vk").toString();
+        current_user = getUsers();
     }
-    if(parametrs.contains("id_vk"))
-    {
-        current_user.setId( parametrs.value("id_vk").toString() );
-    }
-    if(parametrs.contains("first_name_vk"))
-    {
-        current_user.setFirstName( parametrs.value("first_name_vk").toString() );
-    }
-    if(parametrs.contains("last_name_vk"))
-    {
-        current_user.setLastName( parametrs.value("last_name_vk").toString() );
-    }
-    if(parametrs.contains("avatar_vk"))
-    {
-        current_user.setAvatar50px( parametrs.value("avatar_vk").toString() );
-    }
-
     return 0;
 }
 
@@ -70,10 +54,6 @@ int VKontakte::saveData(QString fileName)
     QDataStream stream(&f);
 
     parametrs.insert("access_token_vk", access_token);
-    parametrs.insert("id_vk", current_user.id());
-    parametrs.insert("first_name_vk", current_user.firstName());
-    parametrs.insert("last_name_vk", current_user.lastName());
-    parametrs.insert("avatar_vk", current_user.avatar50px());
 
     stream << parametrs;
     f.close();
@@ -268,103 +248,13 @@ int VKontakte::loadFriendsList()
 }
 */
 
-User& VKontakte::getUser(QString id_user)
+User& VKontakte::getUsers(QString ids_users)
 {
     QUrlQuery request("https://api.vk.com/method/users.get?access_token="+access_token);
-    if( id_user != "null")
+    if( ids_users != "null")
     {
-        request.addQueryItem("user_ids", id_user);
+        request.addQueryItem("user_ids", ids_users);
     }
-    request.addQueryItem("fields","first_name,last_name,sex,photo_50,photo_100,photo_max_orig,blacklisted,bdate,city,country,home_town,online,education,status,last_seen,followers_count,common_count,counters,relation,exports,schools");
-    QString urlString = request.toString();
-    QUrl url(urlString);
-    QByteArray answer = GET(url);
-
-    if(answer.isEmpty())
-    {
-        qDebug() << "Пустой ответ в VKontakte::getUser";
-    }
-
-    QVariantList usersList = parse(answer).toMap().value("response").toList();
-    QVariantMap user = usersList[0].toMap();
-
-    QString id = user.value("uid").toString();
-    QString fname = user.value("first_name").toString();
-    QString lname = user.value("last_name").toString();
-    QString sex = user.value("sex").toString();
-    QString photo50 = user.value("photo_50").toString();
-    QString photo100 = user.value("photo_100").toString();
-    QString photoMAX = user.value("photo_max_orig").toString();
-    QString born = user.value("bdate").toString();
-    QString city = user.value("city").toString();
-    QString country = user.value("country").toString();
-    QString home_town = user.value("home_town").toString();
-    QString online = user.value("online").toString();
-    QVariantList schools = user.value("school").toList();
-        //QVariantMap school = schools[0].toMap();
-            //QString id_school = school.value("id").toString();
-            //QString country_school  = school.value("country").toString();
-            //QString city_school = school.value("city").toString();
-            //QString year_from = school.value("year_from").toString();
-            //QString year_to = school.value("year_to").toString();
-            //QString year_graduated = school.value("year_graduated").toString();
-            //QString class_letter = school.value("class").toString();
-    QVariantMap education = user.value("education").toMap();
-        QString university = education.value("university").toString();
-        QString university_name  = education.value("university_name").toString();
-        QString faculty = education.value("faculty").toString();
-        QString faculty_name = education.value("faculty_name").toString();
-        QString graduation = education.value("graduation").toString();
-     QString status = user.value("status").toString();
-     QVariantMap last_seen = user.value("last_seen").toMap();
-        QString time = last_seen.value("time").toString();
-        QString platform = last_seen.value("platform").toString();
-     QString followers_count = user.value("followers_count").toString();
-     QString common_count = user.value("common_count").toString();
-     QVariantMap counters = user.value("counters").toMap();
-         QString albums = counters.value("albums").toString();
-         QString videos = counters.value("videos").toString();
-         QString audios = counters.value("audios").toString();
-         QString photos = counters.value("photos").toString();
-         QString friends = counters.value("friends").toString();
-         QString groups = counters.value("groups").toString();
-     QString relation = user.value("relation").toString();
-     QString exports = user.value("exports").toString();
-
-     QUrl url_avatar(photo50);
-     QByteArray photo_avatar = GET(url_avatar);
-     QImage img = QImage::fromData(photo_avatar);
-     img.save("vk_avatars/"+id+".jpg");
-     photo50 = "vk_avatars/"+id+".jpg";
-
-     User new_user;
-     new_user.setId(id);
-     new_user.setFirstName(fname);
-     new_user.setLastName(lname);
-     new_user.setSex(sex);
-     new_user.setAvatar50px(photo50);
-     new_user.setAvatar100px(photo100);
-     new_user.setAvatarMAXpx(photoMAX);
-     new_user.setBorn(born);
-     new_user.setCity(city);
-     new_user.setCountry(country);
-     new_user.setCommonCount(common_count);
-     new_user.setFollowersCount(followers_count);
-     new_user.setHomeTown(home_town);
-     new_user.setLastSeen(time, platform);
-     new_user.setOnline(online);
-     new_user.setRelationship(relation);
-     //new_user.setSchool(id_school, country_school, city_school, year_to, year_from, year_graduated, class_letter);
-     new_user.setUniversity(university, university_name, faculty, faculty_name, graduation);
-     new_user.setStatus(status);
-
-     return new_user;
-}
-
-void VKontakte::getUsers(QString ids_users)
-{
-    QUrlQuery request("https://api.vk.com/method/users.get?access_token="+access_token);
-    request.addQueryItem("user_ids", ids_users);
     request.addQueryItem("fields","first_name,last_name,sex,photo_50,photo_100,photo_max_orig,blacklisted,bdate,city,country,home_town,online,education,status,last_seen,followers_count,common_count,counters,relation,exports,schools");
     QString urlString = request.toString();
     QUrl url(urlString);
@@ -376,6 +266,7 @@ void VKontakte::getUsers(QString ids_users)
     }
 
     QVariantList usersList = parse(answer).toMap().value("response").toList();
+    User cache;
     for(int i = 0; i < usersList.size(); i++)
     {
         QVariantMap user = usersList[i].toMap();
@@ -450,7 +341,10 @@ void VKontakte::getUsers(QString ids_users)
          new_user.setStatus(status);
 
          users[id] = new_user;
+         cache = users[id];
     }
+
+    return cache;
 }
 
 int VKontakte::loadDialogsList()

@@ -221,9 +221,7 @@ namespace vkAPI
             int autenthication(QString appID, QString scope, QWebView*); // Запуск авторизации в указанном QWebView //
             int getAccessToken(QUrl); // Получение токена из авторизации //
             bool checkAccessToken(); // Проверка валидности токена //
-
-            User& getUser(QString id_user = "null");
-            void getUsers(QString ids_users);
+            User& getUsers(QString ids_users = "null");
           //int loadFriendsList(); // Закгрузка списка друзей //
             int loadDialogsList(); // Загрузка списка диалогов //
             int loadHistory(QString idDialog); // Загрузка истории переписки указанного диалога //
