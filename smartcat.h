@@ -62,6 +62,7 @@ signals:
 protected:
     Ui::SmartCat *ui;
     DataThread *th;
+    vkAPI::VKontakte *vk;
 
 };
 

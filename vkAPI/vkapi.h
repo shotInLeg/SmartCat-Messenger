@@ -34,58 +34,90 @@ namespace vkAPI
         QString user_id;
         QString user_first_name;
         QString user_last_name;
+        QString user_sex;
         QString user_avatar_50;
-        QString user_last_seen;
+        QString user_avatar_100;
+        QString user_avatar_MAX;
         QString user_relationship;
-
+        QString user_born;
+        QString user_city;
+        QString user_county;
+        QString user_home_town;
+        QString user_online;
+        QString user_school_id;
+        QString user_school_country;
+        QString user_school_city;
+        QString user_school_year_from;
+        QString user_school_year_to;
+        QString user_school_year_graduated;
+        QString user_school_class_letter;
+        QString user_university;
+        QString user_university_name;
+        QString user_university_faculty;
+        QString user_university_faculty_name;
+        QString user_university_graduation;
+        QString user_status;
+        QString user_last_seen_time;
+        QString user_last_seen_platform;
+        QString user_followers_count;
+        QString user_common_count;
+        QString user_count_albums;
+        QString user_count_videos;
+        QString user_count_audios;
+        QString user_count_photos;
+        QString user_count_friends;
+        QString user_count_groups;
+        QString user_exports;
     public:
             User();
             User(const User&);
+            User(QString);
 
             QString id() const;
             QString firstName() const;
             QString lastName() const;
+            QString sex() const;
             QString avatar50px() const;
+            QString avatar100px() const;
+            QString avatarMAXpx() const;
             QString lastSeen() const;
             QString relationship() const;
+            QString born() const;
+            QString city() const;
+            QString country() const;
+            QString homeTown() const;
+            QString online() const;
+            //School
+            //University
+            QString status() const;//
+            QString followersCount() const;//
+            QString commonCount() const;//
+
 
             User& setId(QString);
             User& setFirstName(QString);
             User& setLastName(QString);
+            User& setSex(QString);
             User& setAvatar50px(QString);
-            User& setLastSeen(QString);
+            User& setAvatar100px(QString);
+            User& setAvatarMAXpx(QString);
+            User& setLastSeen(QString last_seen_time, QString last_seen_platform);
             User& setRelationship(QString);
+            User& setBorn(QString);
+            User& setCity(QString);
+            User& setCountry(QString);
+            User& setHomeTown(QString);
+            User& setOnline(QString);
+            User& setSchool(QString id, QString country, QString city, QString year_from, QString year_to, QString year_graduated, QString class_letter);
+            User& setUniversity(QString university, QString university_name, QString university_faculty, QString university_faculty_name, QString university_graduation);
+            User& setStatus(QString);
+            User& setFollowersCount(QString);
+            User& setCommonCount(QString);//
 
             // Перегруженные операторы //
 
             bool operator==(User &user2); // Сравнение id пользователей на равенство
             bool operator!=(User &user2); // Сравнение id пользователей на неравенство
-    };
-
-    class Friend: public User
-    {
-        QString friend_status_string;
-        QString friend_current_town;
-        QString friend_born_date;
-        QString friend_avatar_100;
-        QString friend_avatar_full;
-
-    public:
-            Friend();
-            Friend(const Friend&);
-            Friend(const User&);
-
-            QString statusString() const;
-            QString currentTown() const;
-            QString bornDate() const;
-            QString avatar100px() const;
-            QString avatarFull() const;
-
-            Friend& setStatusString(QString);
-            Friend& setCurrentTown(QString);
-            Friend& setBornDate(QString);
-            Friend& setAvatar100px(QString);
-            Friend& setAvatarFull(QString);
     };
 
     class Dialog
@@ -124,10 +156,7 @@ namespace vkAPI
 
     class Message
     {
-        QString from_id;
-        QString from_first_name;
-        QString from_last_name;
-        QString from_avatar;
+        User user_from;
 
         QString message_id;
         QString message_text;
@@ -137,27 +166,19 @@ namespace vkAPI
             Message(const Message&);
             Message(const User&);
 
-            QString fromId() const;
-            QString fromFirstName() const;
-            QString fromLastName() const;
-            QString fromAvatar() const;
-
+            User& from();
             QString id() const;
             QString text() const;
             QString attachment() const;
 
 
-            Message& setFromId(QString);
-            Message& setFromfName(QString);
-            Message& setFromlName(QString);
-            Message& setFromAvatar(QString);
-
+            Message& setFrom(const User&);
             Message& setId(QString);
             Message& setText(QString);
             Message& setAttachment(QString);
     };
 
-    class LongPoll: public QThread
+    /*class LongPoll: public QThread
     {
         Q_OBJECT
 
@@ -175,44 +196,42 @@ namespace vkAPI
     signals:
             void finishLongPoll();
 
-    };
+    };*/
 
     class VKontakte
     {
-        static QString access_token;
-
-
-
-        static User current_user;
+        QString access_token;
+        User current_user;
 
     public:
-        static QMap<QString, User> users;
-        static QMap<QString, Friend> friends;
-        static QMap<int, Dialog> chats;
-        static QMap<int, Message> history;
+        QMap<QString, User> users;
+        QMap<int, Dialog> chats;
+        QMap<int, Message> history;
 
 
-            static QString accessToken();
-            static User& currentUser();
+            QString accessToken();
+            User& currentUser();
 
-            static void setAccessToken(QString);
-            static void setCurrentUser(User&);
+            void setAccessToken(QString);
+            void setCurrentUser(User&);
 
             // Методы API //
 
             static QByteArray GET(QUrl); // Отправка Get запросов //
-            static int autenthication(QString appID, QString scope, QWebView*); // Запуск авторизации в указанном QWebView //
-            static int getAccessToken(QUrl); // Получение токена из авторизации //
-            static bool checkAccessToken(); // Проверка валидности токена //
+            int autenthication(QString appID, QString scope, QWebView*); // Запуск авторизации в указанном QWebView //
+            int getAccessToken(QUrl); // Получение токена из авторизации //
+            bool checkAccessToken(); // Проверка валидности токена //
 
-            static int loadFriendsList(); // Закгрузка списка друзей //
-            static int loadDialogsList(); // Загрузка списка диалогов //
-            static int loadHistory(QString idDialog); // Загрузка истории переписки указанного диалога //
-            static int sendMessage(QString idDialog, QString textMessage); // Отпрака сообщения //
+            User& getUser(QString id_user = "null");
+            void getUsers(QString ids_users);
+          //int loadFriendsList(); // Закгрузка списка друзей //
+            int loadDialogsList(); // Загрузка списка диалогов //
+            int loadHistory(QString idDialog); // Загрузка истории переписки указанного диалога //
+            int sendMessage(QString idDialog, QString textMessage); // Отпрака сообщения //
 
 
-            static int loadData(QString fileName = "config.txt");
-            static int saveData(QString fileName = "config.txt");
+            int loadData(QString fileName = "config.txt");
+            int saveData(QString fileName = "config.txt");
 
     };
 

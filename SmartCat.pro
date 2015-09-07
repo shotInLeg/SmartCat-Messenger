@@ -20,7 +20,10 @@ SOURCES += main.cpp\
     Widgets/authwidget.cpp \
     Widgets/mainwidget.cpp \
     Widgets/settingswidget.cpp \
-    Widgets/uithread.cpp
+    Widgets/uithread.cpp \
+    vkAPI/class_user.cpp \
+    vkAPI/class_message.cpp \
+    vkAPI/class_dialog.cpp
 
 
 HEADERS  += smartcat.h \

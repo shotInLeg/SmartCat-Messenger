@@ -5,10 +5,10 @@ using namespace vkAPI;
 
 void SmartCat::getToken(QUrl url)
 {
-    if( VKontakte::getAccessToken(url) == 0 )
+    if( vk->getAccessToken(url) == 0 )
     {
-        User user = VKontakte::currentUser();
-        QMessageBox::information(this, "Вы вошли как", "Имя: " + user.firstName() + "\nФамилия: " + user.lastName());
+        User me = vk->currentUser();
+        QMessageBox::information(this, "Вы вошли как", "Имя: " + me.firstName() + "\nФамилия: " + me.lastName());
 
         emit authSuccess(); // Удачное получение токена
     }

@@ -3,7 +3,7 @@
 
 using namespace vkAPI;
 
-SmartCat::SmartCat(QWidget *parent) : QWidget(parent), ui(new Ui::SmartCat)
+SmartCat::SmartCat(QWidget *parent) : QWidget(parent), ui(new Ui::SmartCat), vk(new VKontakte)
 {
     ui->setupUi(this);
     th = new DataThread();
@@ -15,16 +15,17 @@ SmartCat::SmartCat(QWidget *parent) : QWidget(parent), ui(new Ui::SmartCat)
     connect( ui->AuthBrowser, SIGNAL(urlChanged(QUrl)), this, SLOT( getToken(QUrl) ) );
     connect( this, SIGNAL( authSuccess() ), this, SLOT( changeCurrentWidget() ) );
 
-    if ( !VKontakte::checkAccessToken() )
+    if ( !( vk->checkAccessToken() ) )
     {
+        qDebug() << 9;
         ui->stackedWidget->setCurrentWidget( ui->Auth );
-        VKontakte::autenthication( appID, scope, ui->AuthBrowser );
+        qDebug() << 10;
+        vk->autenthication( appID, scope, ui->AuthBrowser );
+        qDebug() << 11;
     }
     else
     {
-        th->startFunction = "loadDialogsList";
-        connect( th, SIGNAL( dialogsUpdated() ), this, SLOT( printDataToDialogList() ) );
-        th->start();
+       printDataToDialogList();
     }
 }
 SmartCat::~SmartCat()
