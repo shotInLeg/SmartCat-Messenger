@@ -161,6 +161,7 @@ namespace vkAPI
         QString message_id;
         QString message_text;
         QString message_attachment;
+        QString message_type_attachment;
     public:
             Message();
             Message(const Message&);
@@ -170,12 +171,14 @@ namespace vkAPI
             QString id() const;
             QString text() const;
             QString attachment() const;
+            QString typeAttachment() const;
 
 
             Message& setFrom(const User&);
             Message& setId(QString);
             Message& setText(QString);
             Message& setAttachment(QString);
+            Message& setTypeAttachment(QString);
     };
 
     /*class LongPoll: public QThread

@@ -428,6 +428,7 @@ int VKontakte::loadHistory(QString idUser) // Загрузка истории п
     {
         QUrlQuery request("https://api.vk.com/method/messages.getHistory?access_token=" + access_token);
         request.addQueryItem("user_id", idUser);
+        request.addQueryItem("version", "5.37");
 
         QString urlString = request.toString();
         QUrl url(urlString);
@@ -446,9 +447,37 @@ int VKontakte::loadHistory(QString idUser) // Загрузка истории п
         for(int i = 0; i < messageList.size(); i++)
         {
             QVariantMap currentMessage = messageList[i].toMap();
-
+            QString id = currentMessage.value("id").toString();
             QString texMsg = currentMessage.value("body").toString();
             QString from = currentMessage.value("from_id").toString();
+            QVariantList attachments = currentMessage.value("attachments").toList();
+                QString type = "";
+                QString aid = "";
+                QString owner_id = "";
+                QString src = "";
+                QString scr_big = "";
+
+                if( attachments.size() > 0 )
+                {
+                    QVariantMap attachment = attachments[0].toMap();
+                        type = attachment.value("type").toString();
+
+                        if(type == "photo")
+                        {
+                            QVariantMap photo = attachment.value("photo").toMap();
+                                aid = photo.value("pid").toString();
+                                owner_id = photo.value("owner_id").toString();
+                                src = photo.value("src").toString();;
+                                scr_big = photo.value("src_big").toString();
+
+                                QUrl url_photo(scr_big);
+                                QByteArray photo_src = GET(url_photo);
+                                QImage img = QImage::fromData(photo_src);
+                                img.save("messages_photo/"+id+".jpg");
+                                src = "messages_photo/"+id+".jpg";
+                        }
+                }
+
             User from_user;
 
             if(from == current_user.id())
@@ -463,9 +492,10 @@ int VKontakte::loadHistory(QString idUser) // Загрузка истории п
                 }
             }
 
+            qDebug() << ">>>" << from_user.id() << " >:\n" <<  "type: "+type << "\n" <<"src: "+src << endl;
 
             Message message;
-            message.setText(texMsg).setFrom(from_user);
+            message.setText(texMsg).setFrom(from_user).setAttachment(src).setTypeAttachment(type);
 
             history[i] = message;
         }

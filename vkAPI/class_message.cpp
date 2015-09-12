@@ -42,6 +42,10 @@ QString Message::attachment() const
 {
     return message_attachment;
 }
+QString Message::typeAttachment() const
+{
+    return message_type_attachment;
+}
 
 // Setters //
 Message& Message::setFrom(const User& a)
@@ -62,5 +66,11 @@ Message& Message::setText(QString text)
 Message& Message::setAttachment(QString attachment)
 {
     message_attachment = attachment;
+    return *this;
+}
+
+Message& Message::setTypeAttachment(QString type)
+{
+    message_type_attachment = type;
     return *this;
 }

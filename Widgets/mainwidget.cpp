@@ -40,7 +40,7 @@ void SmartCat::printDataToMessageList()
     {
         Message message = itr.value();
         QListWidgetItem *item_mess = new QListWidgetItem();
-        item_mess->setSizeHint(QSize(0,75));
+        item_mess->setSizeHint(QSize(0,200));
         QString place = "";
         QString avatar = "";
 
@@ -63,7 +63,10 @@ void SmartCat::printDataToMessageList()
         */
         QWidget *widget = new QWidget();
         QHBoxLayout *layout = new QHBoxLayout();
+        QVBoxLayout *vlayout = new QVBoxLayout();
+
         QTextEdit *textEdit = new QTextEdit( message.text() );
+        QLabel *photo = new QLabel();
         QLabel *label = new QLabel();
 
         if( message.from().id() != selfUser.id() )
@@ -74,7 +77,32 @@ void SmartCat::printDataToMessageList()
             textEdit->setStyleSheet("border-radius: 20px; background: rgb(216,216,216); color: rgb(0,0,0); margin: 7px; padding: 10px;");
 
             layout->addWidget( label );
-            layout->addWidget( textEdit );
+
+            if( message.attachment() != "" )
+            {
+                qDebug() << "!=";
+                //if( message.typeAttachment() == "photo")
+                //{
+                    qDebug() << message.typeAttachment();
+
+                    QPixmap pix_photo( message.attachment() );
+                    photo->setPixmap( pix_photo );
+
+                    if(message.text() != "") vlayout->addWidget( textEdit );
+                    vlayout->addWidget( photo );
+
+                    layout->addLayout( vlayout );
+                //}
+                //else
+                //{
+                //    layout->addWidget( textEdit );
+                //}
+            }
+            else
+            {
+                layout->addWidget( textEdit );
+            }
+
         }
         if( message.from().id() == selfUser.id() )
         {
@@ -83,7 +111,30 @@ void SmartCat::printDataToMessageList()
             label->setStyleSheet("width: 25px; height: 25px; border-radius: 25px;");
             textEdit->setStyleSheet("border-radius: 20px; background: rgb(34,107,179); color: rgb(255,255,255); margin: 7px; padding: 10px;");
 
-            layout->addWidget( textEdit );
+            if( message.attachment() != "" )
+            {
+                qDebug() << "!=";
+                //if( message.typeAttachment() == "photo")
+                //{
+                    qDebug() << message.typeAttachment();
+
+                    QPixmap pix_photo( message.attachment() );
+                    photo->setPixmap( pix_photo );
+
+                    if(message.text() != "") vlayout->addWidget( textEdit );
+                    vlayout->addWidget( photo );
+
+                    layout->addLayout( vlayout );
+                //}
+                //else
+                //{
+                //    layout->addWidget( textEdit );
+                //}
+            }
+            else
+            {
+                layout->addWidget( textEdit );
+            }
             layout->addWidget( label );
         }
 
