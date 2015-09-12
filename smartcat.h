@@ -28,6 +28,16 @@ signals:
     void messagesUpdated();
 };
 
+class BoxMessage : public QWidget
+{
+    Q_OBJECT
+
+public:
+    BoxMessage();
+    BoxMessage(QString place, QString text, QString avatar);
+    BoxMessage(QString text, QMap<QString, QString> attachments);
+};
+
 class SmartCat : public QWidget
 {
     Q_OBJECT
