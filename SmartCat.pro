@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     vkAPI/class_user.cpp \
     vkAPI/class_message.cpp \
     vkAPI/class_dialog.cpp \
-    boxmessage.cpp
+    boxmessage.cpp \
+    vkAPI/class_attachment.cpp
 
 
 HEADERS  += smartcat.h \

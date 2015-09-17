@@ -9,7 +9,7 @@ Message::Message()
     user_from = a;
     message_id = "null";
     message_text = "null";
-    message_attachment = "null";
+    message_attachments.clear();
 }
 Message::Message(const Message& a)
 {
@@ -17,7 +17,7 @@ Message::Message(const Message& a)
 
     message_id = a.message_id;
     message_text = a.message_text;
-    message_attachment = a.message_attachment;
+    message_attachments = a.message_attachments;
 }
 Message::Message(const User& a)
 {
@@ -38,11 +38,10 @@ QString Message::text() const
 {
     return message_text;
 }
-QString Message::attachment() const
+QList< QPair<QString, Attachment> > Message::attachment() const
 {
-    return message_attachment;
+    return message_attachments;
 }
-<<<<<<< HEAD
 QString Message::date() const
 {
     return message_date;
@@ -50,11 +49,6 @@ QString Message::date() const
 QString Message::state() const
 {
     return message_state;
-=======
-QString Message::typeAttachment() const
-{
-    return message_type_attachment;
->>>>>>> origin/master
 }
 
 // Setters //
@@ -73,12 +67,11 @@ Message& Message::setText(QString text)
     message_text = text;
     return *this;
 }
-Message& Message::setAttachment(QString attachment)
+Message& Message::setAttachment(QList< QPair<QString, Attachment> > attachments)
 {
-    message_attachment = attachment;
+    message_attachments = attachments;
     return *this;
 }
-<<<<<<< HEAD
 Message& Message::setDate(QString date)
 {
     message_date = date;
@@ -88,11 +81,4 @@ Message& Message::setDate(QString date)
 Message& Message::setState(QString state)
 {
     message_state = state;
-=======
-
-Message& Message::setTypeAttachment(QString type)
-{
-    message_type_attachment = type;
->>>>>>> origin/master
-    return *this;
 }

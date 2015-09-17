@@ -305,11 +305,11 @@ int VKontakte::loadHistory(QString idUser) // Загрузка истории п
     {
         QUrlQuery request("https://api.vk.com/method/messages.getHistory?access_token=" + access_token);
         request.addQueryItem("user_id", idUser);
-<<<<<<< HEAD
+
         request.addQueryItem("count","50");
-=======
+
         request.addQueryItem("version", "5.37");
->>>>>>> origin/master
+
 
         QString urlString = request.toString();
         QUrl url(urlString);
@@ -327,61 +327,73 @@ int VKontakte::loadHistory(QString idUser) // Загрузка истории п
 
         for(int i = 0; i < messageList.size(); i++)
         {
-<<<<<<< HEAD
+
             QVariantMap message = messageList[i].toMap();
 
+            QString id = message.value("id").toString();
             QString from_id = message.value("from_id").toString();
-            QString text_massage = message.value("body").toString();
+            QString text_message = message.value("body").toString();
             QString date = message.value("date").toString();
             QString state = message.value("read_state").toString();
-=======
-            QVariantMap currentMessage = messageList[i].toMap();
-            QString id = currentMessage.value("id").toString();
-            QString texMsg = currentMessage.value("body").toString();
-            QString from = currentMessage.value("from_id").toString();
-            QVariantList attachments = currentMessage.value("attachments").toList();
-                QString type = "";
-                QString aid = "";
-                QString owner_id = "";
-                QString src = "";
-                QString scr_big = "";
 
-                if( attachments.size() > 0 )
+            QList< QPair<QString, Attachment> > listAttachments;
+            QVariantList attachments = message.value("attachments").toList();
+
+            for(int j = 0; j < attachments.size(); j++)
+            {
+                QVariantMap attachment = attachments[j].toMap();
+
+                QString type = attachment.value("type").toString();
+
+                Attachment *attach;
+
+                if(type == "photo")
                 {
-                    QVariantMap attachment = attachments[0].toMap();
-                        type = attachment.value("type").toString();
 
-                        if(type == "photo")
-                        {
-                            QVariantMap photo = attachment.value("photo").toMap();
-                                aid = photo.value("pid").toString();
-                                owner_id = photo.value("owner_id").toString();
-                                src = photo.value("src").toString();;
-                                scr_big = photo.value("src_big").toString();
+                    attach = new Photo();
 
-                                QUrl url_photo(scr_big);
-                                QByteArray photo_src = GET(url_photo);
-                                QImage img = QImage::fromData(photo_src);
-                                img.save("messages_photo/"+id+".jpg");
-                                src = "messages_photo/"+id+".jpg";
-                        }
+                    QVariantMap photo = attachment.value("photo").toMap();
+
+                        QString photo_id = photo.value("id").toString();
+                        QString album_id = photo.value("album_id").toString();
+                        QString owner_id = photo.value("owner_id").toString();
+                        QString photo_75 = photo.value("photo_75").toString();
+                        QString photo_130 = photo.value("photo_130").toString();
+                        QString photo_1280 = photo.value("photo_1280").toString();
+                        QString photo_width = photo.value("width").toString();
+                        QString photo_height = photo.value("height").toString();
+                        QString date = photo.value("date").toString();
+
+                        QUrl url_photo(photo_75);
+                        QByteArray photo_src = GET(url_photo);
+                        QImage img = QImage::fromData(photo_src);
+                        img.save("messages_photo/"+id+".jpg");
+                        photo_75 = "messages_photo/"+id+".jpg";
+
+                    attach->setID(photo_id);
+                    attach->setAlbumID(album_id);
+                    attach->setOwnerID(owner_id);
+                    attach->setPhoto75(photo_75);
+                    attach->setPhoto130(photo_130);
+                    attach->setPhoto1280(photo_1280);
+                    attach->setPhotoWidth(photo_width);
+                    attach->setPhotoHeight(photo_height);
+                    attach->setType(type);
                 }
 
-            User from_user;
->>>>>>> origin/master
+                listAttachments.append( qMakePair(type, *attach) );
+            }
+
 
             User from_user;
             from_user = users[from_id];
 
-            qDebug() << ">>>" << from_user.id() << " >:\n" <<  "type: "+type << "\n" <<"src: "+src << endl;
+            //qDebug() << ">>>" << from_user.id() << " >:\n" <<  "type: "+type << "\n" <<"src: "+src << endl;
 
-<<<<<<< HEAD
+
             Message msg;
-            msg.setFrom(from_user).setText(text_massage).setDate(date).setState(state);
-=======
-            Message message;
-            message.setText(texMsg).setFrom(from_user).setAttachment(src).setTypeAttachment(type);
->>>>>>> origin/master
+            msg.setFrom(from_user).setText(text_message).setDate(date).setState(state).setAttachment(listAttachments);
+
 
             history[ date.toInt() ] = msg;
         }
@@ -582,6 +594,14 @@ int VKontakte::loadFriendsList()
     return 0;
 }
 */
+
+
+
+
+
+
+
+
 
 
 

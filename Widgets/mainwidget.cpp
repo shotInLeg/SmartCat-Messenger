@@ -41,26 +41,7 @@ void SmartCat::printDataToMessageList()
         Message message = itr.value();
         QListWidgetItem *item_mess = new QListWidgetItem();
         item_mess->setSizeHint(QSize(0,200));
-        QString place = "";
-        QString avatar = "";
 
-        /*QTextEdit *textBox = new QTextEdit();
-        textBox->setReadOnly(true);
-        if(message.from().id() == selfUser.id())
-        {
-            item_mess->setIcon( QIcon( selfUser.avatar50px() ) );
-            item_mess->setSizeHint(QSize(0,65));
-            textBox->setText( message.text() );
-            textBox->setStyleSheet("height: auto; border-radius: 20px; background: rgb(34,107,179); color: rgb(255,255,255); margin: 7px; padding: 10px;");
-        }
-        else
-        {
-            item_mess->setIcon( QIcon( message.from().avatar50px() ) );
-            item_mess->setSizeHint(QSize(0,65));
-            textBox->setText( message.text() );
-            textBox->setStyleSheet("height: auto; border-radius: 20px; background: rgb(255,255,255); color: rgb(0,0,0); margin: 7px; padding: 10px;");
-        }
-        */
         QWidget *widget = new QWidget();
         QHBoxLayout *layout = new QHBoxLayout();
         QVBoxLayout *vlayout = new QVBoxLayout();
@@ -78,25 +59,21 @@ void SmartCat::printDataToMessageList()
 
             layout->addWidget( label );
 
-            if( message.attachment() != "" )
+            if( !(message.attachment().isEmpty()) )
             {
                 qDebug() << "!=";
-                //if( message.typeAttachment() == "photo")
-                //{
-                    qDebug() << message.typeAttachment();
 
-                    QPixmap pix_photo( message.attachment() );
-                    photo->setPixmap( pix_photo );
-
-                    if(message.text() != "") vlayout->addWidget( textEdit );
-                    vlayout->addWidget( photo );
-
-                    layout->addLayout( vlayout );
-                //}
-                //else
-                //{
-                //    layout->addWidget( textEdit );
-                //}
+                for(int i = 0; i < message.attachment().size(); i++)
+                {
+                    if( message.attachment().at(i).first == "photo")
+                    {
+                        QPixmap pix_photo( message.attachment().at(i).second.photo75() );
+                        photo->setPixmap( pix_photo );
+                        if(message.text() != "") vlayout->addWidget( textEdit );
+                        vlayout->addWidget( photo );
+                        layout->addLayout( vlayout );
+                    }
+                }
             }
             else
             {
@@ -104,6 +81,8 @@ void SmartCat::printDataToMessageList()
             }
 
         }
+
+
         if( message.from().id() == selfUser.id() )
         {
             QPixmap pix( selfUser.avatar50px() );
@@ -111,25 +90,19 @@ void SmartCat::printDataToMessageList()
             label->setStyleSheet("width: 25px; height: 25px; border-radius: 25px;");
             textEdit->setStyleSheet("border-radius: 20px; background: rgb(34,107,179); color: rgb(255,255,255); margin: 7px; padding: 10px;");
 
-            if( message.attachment() != "" )
+            if( !(message.attachment().isEmpty()) )
             {
-                qDebug() << "!=";
-                //if( message.typeAttachment() == "photo")
-                //{
-                    qDebug() << message.typeAttachment();
-
-                    QPixmap pix_photo( message.attachment() );
-                    photo->setPixmap( pix_photo );
-
-                    if(message.text() != "") vlayout->addWidget( textEdit );
-                    vlayout->addWidget( photo );
-
-                    layout->addLayout( vlayout );
-                //}
-                //else
-                //{
-                //    layout->addWidget( textEdit );
-                //}
+                for(int i = 0; i < message.attachment().size(); i++)
+                {
+                    if( message.attachment().at(i).first == "photo")
+                    {
+                        QPixmap pix_photo( message.attachment().at(i).second.photo75() );
+                        photo->setPixmap( pix_photo );
+                        if(message.text() != "") vlayout->addWidget( textEdit );
+                        vlayout->addWidget( photo );
+                        layout->addLayout( vlayout );
+                    }
+                }
             }
             else
             {
