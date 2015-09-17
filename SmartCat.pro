@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     Widgets/uithread.cpp \
     vkAPI/class_user.cpp \
     vkAPI/class_message.cpp \
-    vkAPI/class_dialog.cpp
+    vkAPI/class_dialog.cpp \
+    boxmessage.cpp
 
 
 HEADERS  += smartcat.h \

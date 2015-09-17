@@ -40,26 +40,111 @@ void SmartCat::printDataToMessageList()
     {
         Message message = itr.value();
         QListWidgetItem *item_mess = new QListWidgetItem();
-        QTextEdit *textBox = new QTextEdit();
+        item_mess->setSizeHint(QSize(0,200));
+        QString place = "";
+        QString avatar = "";
+
+        /*QTextEdit *textBox = new QTextEdit();
+        textBox->setReadOnly(true);
         if(message.from().id() == selfUser.id())
         {
             item_mess->setIcon( QIcon( selfUser.avatar50px() ) );
             item_mess->setSizeHint(QSize(0,65));
             textBox->setText( message.text() );
-            textBox->setStyleSheet("background: rgb(0,0,0); color: rgb(255,255,255);");
+            textBox->setStyleSheet("height: auto; border-radius: 20px; background: rgb(34,107,179); color: rgb(255,255,255); margin: 7px; padding: 10px;");
         }
         else
         {
             item_mess->setIcon( QIcon( message.from().avatar50px() ) );
             item_mess->setSizeHint(QSize(0,65));
             textBox->setText( message.text() );
-            textBox->setStyleSheet("background: rgb(255,255,255); color: rgb(0,0,0);");
+            textBox->setStyleSheet("height: auto; border-radius: 20px; background: rgb(255,255,255); color: rgb(0,0,0); margin: 7px; padding: 10px;");
+        }
+        */
+        QWidget *widget = new QWidget();
+        QHBoxLayout *layout = new QHBoxLayout();
+        QVBoxLayout *vlayout = new QVBoxLayout();
+
+        QTextEdit *textEdit = new QTextEdit( message.text() );
+        QLabel *photo = new QLabel();
+        QLabel *label = new QLabel();
+
+        if( message.from().id() != selfUser.id() )
+        {
+            QPixmap pix( message.from().avatar50px() );
+            label->setPixmap( pix );
+            label->setStyleSheet("width: 25px; height: 25px; border-radius: 25px;");
+            textEdit->setStyleSheet("border-radius: 20px; background: rgb(216,216,216); color: rgb(0,0,0); margin: 7px; padding: 10px;");
+
+            layout->addWidget( label );
+
+            if( message.attachment() != "" )
+            {
+                qDebug() << "!=";
+                //if( message.typeAttachment() == "photo")
+                //{
+                    qDebug() << message.typeAttachment();
+
+                    QPixmap pix_photo( message.attachment() );
+                    photo->setPixmap( pix_photo );
+
+                    if(message.text() != "") vlayout->addWidget( textEdit );
+                    vlayout->addWidget( photo );
+
+                    layout->addLayout( vlayout );
+                //}
+                //else
+                //{
+                //    layout->addWidget( textEdit );
+                //}
+            }
+            else
+            {
+                layout->addWidget( textEdit );
+            }
+
+        }
+        if( message.from().id() == selfUser.id() )
+        {
+            QPixmap pix( selfUser.avatar50px() );
+            label->setPixmap( pix );
+            label->setStyleSheet("width: 25px; height: 25px; border-radius: 25px;");
+            textEdit->setStyleSheet("border-radius: 20px; background: rgb(34,107,179); color: rgb(255,255,255); margin: 7px; padding: 10px;");
+
+            if( message.attachment() != "" )
+            {
+                qDebug() << "!=";
+                //if( message.typeAttachment() == "photo")
+                //{
+                    qDebug() << message.typeAttachment();
+
+                    QPixmap pix_photo( message.attachment() );
+                    photo->setPixmap( pix_photo );
+
+                    if(message.text() != "") vlayout->addWidget( textEdit );
+                    vlayout->addWidget( photo );
+
+                    layout->addLayout( vlayout );
+                //}
+                //else
+                //{
+                //    layout->addWidget( textEdit );
+                //}
+            }
+            else
+            {
+                layout->addWidget( textEdit );
+            }
+            layout->addWidget( label );
         }
 
+        widget->setLayout(layout);
+
         ui->listMessages->addItem( item_mess );
-        ui->listMessages->setItemWidget(item_mess,textBox);
+        ui->listMessages->setItemWidget(item_mess, widget );
     }
 }
+
 
 Dialog SmartCat::getCurrnentDialog(int row)
 {

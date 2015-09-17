@@ -291,6 +291,9 @@ padding: 5px;</string>
                  <property name="sizeAdjustPolicy">
                   <enum>QAbstractScrollArea::AdjustToContents</enum>
                  </property>
+                 <property name="autoScrollMargin">
+                  <number>8</number>
+                 </property>
                  <property name="selectionMode">
                   <enum>QAbstractItemView::NoSelection</enum>
                  </property>

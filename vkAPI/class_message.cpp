@@ -42,6 +42,7 @@ QString Message::attachment() const
 {
     return message_attachment;
 }
+<<<<<<< HEAD
 QString Message::date() const
 {
     return message_date;
@@ -49,6 +50,11 @@ QString Message::date() const
 QString Message::state() const
 {
     return message_state;
+=======
+QString Message::typeAttachment() const
+{
+    return message_type_attachment;
+>>>>>>> origin/master
 }
 
 // Setters //
@@ -72,6 +78,7 @@ Message& Message::setAttachment(QString attachment)
     message_attachment = attachment;
     return *this;
 }
+<<<<<<< HEAD
 Message& Message::setDate(QString date)
 {
     message_date = date;
@@ -81,5 +88,11 @@ Message& Message::setDate(QString date)
 Message& Message::setState(QString state)
 {
     message_state = state;
+=======
+
+Message& Message::setTypeAttachment(QString type)
+{
+    message_type_attachment = type;
+>>>>>>> origin/master
     return *this;
 }

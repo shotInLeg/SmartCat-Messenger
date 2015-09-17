@@ -151,6 +151,7 @@ namespace vkAPI
 
     class Message
     {
+<<<<<<< HEAD
         protected:
             User user_from;
             QString message_id;
@@ -160,6 +161,15 @@ namespace vkAPI
             QString message_state;
 
         public:
+=======
+        User user_from;
+
+        QString message_id;
+        QString message_text;
+        QString message_attachment;
+        QString message_type_attachment;
+    public:
+>>>>>>> origin/master
             Message();
             Message(const Message&);
             Message(const User&);
@@ -168,15 +178,35 @@ namespace vkAPI
             QString id() const;
             QString text() const;
             QString attachment() const;
+<<<<<<< HEAD
             QString date() const;
             QString state() const;
+=======
+            QString typeAttachment() const;
+
+>>>>>>> origin/master
 
             Message& setFrom(const User&);
             Message& setId(QString);
             Message& setText(QString);
             Message& setAttachment(QString);
+<<<<<<< HEAD
             Message& setDate(QString);
             Message& setState(QString);
+=======
+            Message& setTypeAttachment(QString);
+    };
+
+    /*class LongPoll: public QThread
+    {
+        Q_OBJECT
+
+        QString long_poll_key;
+        QString long_poll_server;
+        QString long_poll_ts;
+        QString long_poll_pts;
+        QString long_poll_mode;
+>>>>>>> origin/master
 
     };
 
