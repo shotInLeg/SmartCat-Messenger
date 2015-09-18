@@ -345,12 +345,10 @@ int VKontakte::loadHistory(QString idUser) // Загрузка истории п
 
                 QString type = attachment.value("type").toString();
 
-                Attachment *attach;
+                Attachment attach;
 
                 if(type == "photo")
                 {
-
-                    attach = new Photo();
 
                     QVariantMap photo = attachment.value("photo").toMap();
 
@@ -370,18 +368,18 @@ int VKontakte::loadHistory(QString idUser) // Загрузка истории п
                         img.save("messages_photo/"+id+".jpg");
                         photo_75 = "messages_photo/"+id+".jpg";
 
-                    attach->setID(photo_id);
-                    attach->setAlbumID(album_id);
-                    attach->setOwnerID(owner_id);
-                    attach->setPhoto75(photo_75);
-                    attach->setPhoto130(photo_130);
-                    attach->setPhoto1280(photo_1280);
-                    attach->setPhotoWidth(photo_width);
-                    attach->setPhotoHeight(photo_height);
-                    attach->setType(type);
+                    attach.setID(photo_id);
+                    attach.setAlbumID(album_id);
+                    attach.setOwnerID(owner_id);
+                    attach.setPhoto75(photo_75);
+                    attach.setPhoto130(photo_130);
+                    attach.setPhoto1280(photo_1280);
+                    attach.setPhotoWidth(photo_width);
+                    attach.setPhotoHeight(photo_height);
+                    attach.setType(type);
                 }
 
-                listAttachments.append( qMakePair(type, *attach) );
+                listAttachments.append( qMakePair(type, attach) );
             }
 
 

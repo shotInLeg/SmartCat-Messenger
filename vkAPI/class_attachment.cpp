@@ -9,7 +9,7 @@ Attachment::Attachment()
     attachment_type = "null";
     owner_id = "null";
 }
-Attachment::Attachment(const Attachment &a)
+Attachment::Attachment(const Attachment &a):Photo(a)
 {
     attachment_id = a.attachment_id;
     attachment_type = a.attachment_type;

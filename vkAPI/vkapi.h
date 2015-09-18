@@ -27,14 +27,9 @@
 
 namespace vkAPI
 {
-    class User;
-    class Dialog;
-    class Message;
-    class Attachment;
-    class Photo;
-    class VKontakte;
-}
-    class vkAPI::User
+
+
+    class User
     {
         protected:
             QString user_id;
@@ -124,7 +119,7 @@ namespace vkAPI
             bool operator!=(User &user2); // Сравнение id пользователей на неравенство
     };
 
-    class vkAPI::Dialog
+    class Dialog
     {
         protected:
             QString dialog_id;
@@ -157,43 +152,7 @@ namespace vkAPI
             Dialog& setMembers(QList<QString>);
     };
 
-    class vkAPI::Attachment
-    {
-    protected:
-        QString attachment_id;
-        QString attachment_type;
-        QString owner_id;
-
-    public:
-        Attachment();
-        Attachment(const Attachment&);
-
-        QString id() const;
-        QString type() const;
-        QString ownerID() const;
-
-        QString albumID() const {}
-        virtual QString photo75() const {}
-        QString photo130() const {}
-        QString photo1280() const {}
-        QString photoWidth() const {}
-        QString photoHeight() const {}
-        QString photoDate() const {}
-
-        vkAPI::Attachment& setID(QString id);
-        vkAPI::Attachment& setType(QString type);
-        vkAPI::Attachment& setOwnerID(QString owner_id);
-
-        vkAPI::Photo& setAlbumID(QString){}
-        vkAPI::Photo& setPhoto75(QString){}
-        vkAPI::Photo& setPhoto130(QString){}
-        vkAPI::Photo& setPhoto1280(QString){}
-        vkAPI::Photo& setPhotoWidth(QString){}
-        vkAPI::Photo& setPhotoHeight(QString){}
-        vkAPI::Photo& setPhotoDate(QString){}
-    };
-
-    class vkAPI::Photo : public vkAPI::Attachment
+    class Photo
     {
     protected:
         QString album_id;
@@ -216,22 +175,46 @@ namespace vkAPI
         QString photoHeight() const;
         QString photoDate() const;
 
-        vkAPI::Photo& setAlbumID(QString id);
-        vkAPI::Photo& setPhoto75(QString url);
-        vkAPI::Photo& setPhoto130(QString url);
-        vkAPI::Photo& setPhoto1280(QString url);
-        vkAPI::Photo& setPhotoWidth(QString width);
-        vkAPI::Photo& setPhotoHeight(QString height);
-        vkAPI::Photo& setPhotoDate(QString date);
+        Photo& setAlbumID(QString id);
+        Photo& setPhoto75(QString url);
+        Photo& setPhoto130(QString url);
+        Photo& setPhoto1280(QString url);
+        Photo& setPhotoWidth(QString width);
+        Photo& setPhotoHeight(QString height);
+        Photo& setPhotoDate(QString date);
     };
 
-    class vkAPI::Message
+    class Attachment : public Photo
     {
     protected:
-        vkAPI::User user_from;
+        QString attachment_id;
+        QString attachment_type;
+        QString owner_id;
+
+    public:
+        Attachment();
+        Attachment(const Attachment&);
+
+        QString id() const;
+        QString type() const;
+        QString ownerID() const;
+
+
+
+        Attachment& setID(QString id);
+        Attachment& setType(QString type);
+        Attachment& setOwnerID(QString owner_id);
+    };
+
+
+
+    class Message
+    {
+    protected:
+        User user_from;
         QString message_id;
         QString message_text;
-        QList< QPair<QString, vkAPI::Attachment> > message_attachments;
+        QList< QPair<QString, Attachment> > message_attachments;
         QString message_date;
         QString message_state;
     public:
@@ -240,31 +223,31 @@ namespace vkAPI
             Message(const Message&);
             Message(const User&);
 
-            vkAPI::User& from();
+            User& from();
             QString id() const;
             QString text() const;
-            QList< QPair<QString, vkAPI::Attachment> > attachment() const;
+            QList< QPair<QString, Attachment> > attachment() const;
             QString date() const;
             QString state() const;
 
-            vkAPI::Message& setFrom(const User&);
-            vkAPI::Message& setId(QString);
-            vkAPI::Message& setText(QString);
-            vkAPI::Message& setAttachment( QList< QPair<QString, vkAPI::Attachment> > );
-            vkAPI::Message& setDate(QString);
-            vkAPI::Message& setState(QString);
+            Message& setFrom(const User&);
+            Message& setId(QString);
+            Message& setText(QString);
+            Message& setAttachment( QList< QPair<QString, Attachment> > );
+            Message& setDate(QString);
+            Message& setState(QString);
     };
 
-    class vkAPI::VKontakte
+    class VKontakte
     {
         protected:
             QString access_token;
             vkAPI::User current_user;
 
         public:
-            QMap<QString, vkAPI::User> users;
-            QMap<int, vkAPI::Dialog> chats;
-            QMap<int, vkAPI::Message> history;
+            QMap<QString, User> users;
+            QMap<int, Dialog> chats;
+            QMap<int, Message> history;
 
         protected:
             int loadData(QString fileName = "config.txt");
@@ -314,5 +297,5 @@ namespace vkAPI
     };*/
 
 
-
+}
 #endif // VKAPI_H
