@@ -269,7 +269,7 @@ namespace vkAPI
             bool checkAccessToken(); // Проверка валидности AccessToken //
             User& getUsers(QString ids_users = "null");
           //int loadFriendsList(); // Закгрузка списка друзей //
-            int loadDialogsList(); // Загрузка списка диалогов //
+            int loadDialogsList(QString a = "") throw(std::exception); // Загрузка списка диалогов //
             int loadHistory(QString idDialog); // Загрузка истории переписки указанного диалога //
             int sendMessage(QString idDialog, QString textMessage); // Отпрака сообщения //
     };

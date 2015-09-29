@@ -165,135 +165,145 @@ User& VKontakte::getUsers(QString ids_users) // Получение данных 
         QString home_town = user.value("home_town").toString();
         QString online = user.value("online").toString();
         //QVariantList schools = user.value("school").toList();
-            //QVariantMap school = schools[1].toMap();
-                //QString id_school = school.value("id").toString();
-                //QString country_school  = school.value("country").toString();
-                //QString city_school = school.value("city").toString();
-                //QString year_from = school.value("year_from").toString();
-                //QString year_to = school.value("year_to").toString();
-                //QString year_graduated = school.value("year_graduated").toString();
-                //QString class_letter = school.value("class").toString();
+        //QVariantMap school = schools[1].toMap();
+        //QString id_school = school.value("id").toString();
+        //QString country_school  = school.value("country").toString();
+        //QString city_school = school.value("city").toString();
+        //QString year_from = school.value("year_from").toString();
+        //QString year_to = school.value("year_to").toString();
+        //QString year_graduated = school.value("year_graduated").toString();
+        //QString class_letter = school.value("class").toString();
         QVariantMap education = user.value("education").toMap();
-            QString university = education.value("university").toString();
-            QString university_name  = education.value("university_name").toString();
-            QString faculty = education.value("faculty").toString();
-            QString faculty_name = education.value("faculty_name").toString();
-            QString graduation = education.value("graduation").toString();
-         QString status = user.value("status").toString();
-         QVariantMap last_seen = user.value("last_seen").toMap();
-            QString time = last_seen.value("time").toString();
-            QString platform = last_seen.value("platform").toString();
-         QString followers_count = user.value("followers_count").toString();
-         QString common_count = user.value("common_count").toString();
-         QVariantMap counters = user.value("counters").toMap();
-             QString albums = counters.value("albums").toString();
-             QString videos = counters.value("videos").toString();
-             QString audios = counters.value("audios").toString();
-             QString photos = counters.value("photos").toString();
-             QString friends = counters.value("friends").toString();
-             QString groups = counters.value("groups").toString();
-         QString relation = user.value("relation").toString();
-         QString exports = user.value("exports").toString();
+        QString university = education.value("university").toString();
+        QString university_name  = education.value("university_name").toString();
+        QString faculty = education.value("faculty").toString();
+        QString faculty_name = education.value("faculty_name").toString();
+        QString graduation = education.value("graduation").toString();
+        QString status = user.value("status").toString();
+        QVariantMap last_seen = user.value("last_seen").toMap();
+        QString time = last_seen.value("time").toString();
+        QString platform = last_seen.value("platform").toString();
+        QString followers_count = user.value("followers_count").toString();
+        QString common_count = user.value("common_count").toString();
+        QVariantMap counters = user.value("counters").toMap();
+        QString albums = counters.value("albums").toString();
+        QString videos = counters.value("videos").toString();
+        QString audios = counters.value("audios").toString();
+        QString photos = counters.value("photos").toString();
+        QString friends = counters.value("friends").toString();
+        QString groups = counters.value("groups").toString();
+        QString relation = user.value("relation").toString();
+        QString exports = user.value("exports").toString();
 
-         QUrl url_avatar(photo50);
-         QByteArray photo_avatar = GET(url_avatar);
-         QImage img = QImage::fromData(photo_avatar);
-         img.save("vk_avatars/"+id+".jpg");
-         photo50 = "vk_avatars/"+id+".jpg";
+        QUrl url_avatar(photo50);
+        QByteArray photo_avatar = GET(url_avatar);
+        QImage img = QImage::fromData(photo_avatar);
+        img.save("vk_avatars/"+id+".jpg");
+        photo50 = "vk_avatars/"+id+".jpg";
 
-         User new_user;
-         new_user.setId(id);
-         new_user.setFirstName(fname);
-         new_user.setLastName(lname);
-         new_user.setSex(sex);
-         new_user.setAvatar50px(photo50);
-         new_user.setAvatar100px(photo100);
-         new_user.setAvatarMAXpx(photoMAX);
-         new_user.setBorn(born);
-         new_user.setCity(city);
-         new_user.setCountry(country);
-         new_user.setCommonCount(common_count);
-         new_user.setFollowersCount(followers_count);
-         new_user.setHomeTown(home_town);
-         new_user.setLastSeen(time, platform);
-         new_user.setOnline(online);
-         new_user.setRelationship(relation);
-         //new_user.setSchool(id_school, country_school, city_school, year_to, year_from, year_graduated, class_letter);
-         new_user.setUniversity(university, university_name, faculty, faculty_name, graduation);
-         new_user.setStatus(status);
+        User new_user;
+        new_user.setId(id);
+        new_user.setFirstName(fname);
+        new_user.setLastName(lname);
+        new_user.setSex(sex);
+        new_user.setAvatar50px(photo50);
+        new_user.setAvatar100px(photo100);
+        new_user.setAvatarMAXpx(photoMAX);
+        new_user.setBorn(born);
+        new_user.setCity(city);
+        new_user.setCountry(country);
+        new_user.setCommonCount(common_count);
+        new_user.setFollowersCount(followers_count);
+        new_user.setHomeTown(home_town);
+        new_user.setLastSeen(time, platform);
+        new_user.setOnline(online);
+        new_user.setRelationship(relation);
+        //new_user.setSchool(id_school, country_school, city_school, year_to, year_from, year_graduated, class_letter);
+        new_user.setUniversity(university, university_name, faculty, faculty_name, graduation);
+        new_user.setStatus(status);
 
-         users[id] = new_user;
-         cache = users[id];
+        users[id] = new_user;
+        cache = users[id];
     }
     return cache;
 }
 
-int VKontakte::loadDialogsList() // Загрузка данных диалогов //
+int VKontakte::loadDialogsList(QString a) throw(std::exception) // Загрузка данных диалогов //
 {
-    if( checkAccessToken() == true )
+    try
     {
-        QString dialogIds = "1";
-
-        QUrlQuery request("https://api.vk.com/method/messages.getDialogs?access_token=" + access_token);
-        request.addQueryItem("offset","0");
-        request.addQueryItem("preview_length","25");
-
-
-        QString urlString = request.toString();
-        QUrl url(urlString);
-        QByteArray answer = GET(url);
-
-        if(answer.isEmpty())
+        if( checkAccessToken() == true )
         {
-            qDebug() << "Пустой ответ в VKontakte::loadDialogsList";
-            return 0x000002;
-        }
+            QString dialogIds = "1";
+
+            QUrlQuery request("https://api.vk.com/method/messages.getDialogs?access_token=" + access_token);
+            request.addQueryItem("offset","0");
+            request.addQueryItem("preview_length","25");
 
 
-        QVariantList dialogsList = parse(answer).toMap().value("response").toList();
+            QString urlString = request.toString();
+            QUrl url(urlString);
+            QByteArray answer = GET(url);
 
-        chats.clear();
-        for(int i = 0; i < dialogsList.size(); i++)
-        {
-            QVariantMap currentDialog = dialogsList[i].toMap();
-
-            QString id = currentDialog.value("uid").toString();
-            QString title = currentDialog.value("title").toString();
-            QString body = currentDialog.value("body").toString();
-            QString date = currentDialog.value("date").toString();
-            QString state = currentDialog.value("read_state").toString();
-
-            dialogIds += "," + id;
-
-            Dialog dialog;
-            dialog.setDate(date).setId(id).setState(state).setTitle(title).setBody(body);
-
-            chats[ date.toInt() ] = dialog;
-        }
-
-        // Запрос на получение данных о пользователе //
-        getUsers(dialogIds);
-
-
-        // Замена title в списке диалогов //
-        QMap<int, Dialog>::iterator itr;
-        for(itr = chats.begin(); itr != chats.end(); itr++)
-        {
-            Dialog dialog;
-            dialog = itr.value();
-
-            if(dialog.title() == "" ||  dialog.title() == " ... " ||  dialog.title() == "...")
+            if(answer.isEmpty())
             {
-                // Имя и Фамилия записываются в название диалога //
-                dialog.setTitle( users[dialog.id()].firstName() + " " + users[dialog.id()].lastName() );
-                dialog.setAvatar( users[dialog.id()].avatar50px() );
+                qDebug() << "Пустой ответ в VKontakte::loadDialogsList";
+                return 0x000002;
             }
-            itr.value() = dialog;
+
+            qDebug() << "Парсер";
+            QVariantList dialogsList = parse(answer).toMap().value("response").toList();
+
+            chats.clear();
+            for(int i = 0; i < dialogsList.size(); i++)
+            {
+                QVariantMap currentDialog = dialogsList[i].toMap();
+
+                QString id = currentDialog.value("uid").toString();
+                QString title = currentDialog.value("title").toString();
+                QString body = currentDialog.value("body").toString();
+                QString date = currentDialog.value("date").toString();
+                QString state = currentDialog.value("read_state").toString();
+
+                dialogIds += "," + id;
+
+                Dialog dialog;
+                dialog.setDate(date).setId(id).setState(state).setTitle(title).setBody(body);
+
+                chats[ date.toInt() ] = dialog;
+            }
+
+            qDebug() << "Получение данных о пользователе";
+            // Запрос на получение данных о пользователе //
+            getUsers(dialogIds);
+
+
+            // Замена title в списке диалогов //
+            qDebug() << "Замена title";
+            QMap<int, Dialog>::iterator itr;
+            for(itr = chats.begin(); itr != chats.end(); itr++)
+            {
+                Dialog dialog;
+                dialog = itr.value();
+
+                if(dialog.title() == "" ||  dialog.title() == " ... " ||  dialog.title() == "...")
+                {
+                    // Имя и Фамилия записываются в название диалога //
+                    dialog.setTitle( users[dialog.id()].firstName() + " " + users[dialog.id()].lastName() );
+                    dialog.setAvatar( users[dialog.id()].avatar50px() );
+                }
+                itr.value() = dialog;
+            }
+            qDebug() << "end loadDailod";
+        }
+        else
+        {
+            return 0x000001;
         }
     }
-    else
+    catch(std::exception ex)
     {
-        return 0x000001;
+        throw ex.what();
     }
 
     return 0;
@@ -352,21 +362,21 @@ int VKontakte::loadHistory(QString idUser) // Загрузка истории п
 
                     QVariantMap photo = attachment.value("photo").toMap();
 
-                        QString photo_id = photo.value("id").toString();
-                        QString album_id = photo.value("album_id").toString();
-                        QString owner_id = photo.value("owner_id").toString();
-                        QString photo_75 = photo.value("photo_75").toString();
-                        QString photo_130 = photo.value("photo_130").toString();
-                        QString photo_1280 = photo.value("photo_1280").toString();
-                        QString photo_width = photo.value("width").toString();
-                        QString photo_height = photo.value("height").toString();
-                        QString date = photo.value("date").toString();
+                    QString photo_id = photo.value("id").toString();
+                    QString album_id = photo.value("album_id").toString();
+                    QString owner_id = photo.value("owner_id").toString();
+                    QString photo_75 = photo.value("photo_75").toString();
+                    QString photo_130 = photo.value("photo_130").toString();
+                    QString photo_1280 = photo.value("photo_1280").toString();
+                    QString photo_width = photo.value("width").toString();
+                    QString photo_height = photo.value("height").toString();
+                    QString date = photo.value("date").toString();
 
-                        QUrl url_photo(photo_75);
-                        QByteArray photo_src = GET(url_photo);
-                        QImage img = QImage::fromData(photo_src);
-                        img.save("messages_photo/"+id+".jpg");
-                        photo_75 = "messages_photo/"+id+".jpg";
+                    QUrl url_photo(photo_75);
+                    QByteArray photo_src = GET(url_photo);
+                    QImage img = QImage::fromData(photo_src);
+                    img.save("messages_photo/"+id+".jpg");
+                    photo_75 = "messages_photo/"+id+".jpg";
 
                     attach.setID(photo_id);
                     attach.setAlbumID(album_id);

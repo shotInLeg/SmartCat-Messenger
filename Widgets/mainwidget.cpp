@@ -7,13 +7,13 @@ void SmartCat::printDataToDialogList()
 {
     qDebug() << "printDialog";
 
+    th->addQueue(&(vk->loadDialogsList) );
 
-    vk->loadDialogsList();
 
-    qDebug() << "end";
+
     ui->listDialogs->clear();
 
-    for(QMap<int,Dialog>::iterator itr = vk->chats.end()-1; itr != vk->chats.begin()+1; itr--)
+    for( QMap<int,Dialog>::iterator itr = vk->chats.end()-1; itr != vk->chats.begin()+1; itr-- )
     {
         Dialog dialog;
         dialog = itr.value();
@@ -23,6 +23,9 @@ void SmartCat::printDataToDialogList()
 
         ui->listDialogs->addItem(item);
     }
+
+    qDebug() << "end";
+
 }
 
 void SmartCat::printDataToMessageList()
@@ -121,9 +124,9 @@ void SmartCat::printDataToMessageList()
 
 Dialog SmartCat::getCurrnentDialog(int row)
 {
-   QMap<int, Dialog>::iterator chat = vk->chats.end() - (row + 1);
-   currentDialog = chat.value();
-   return currentDialog;
+    QMap<int, Dialog>::iterator chat = vk->chats.end() - (row + 1);
+    currentDialog = chat.value();
+    return currentDialog;
 }
 
 void SmartCat::on_listDialogs_currentRowChanged(int currentRow)
@@ -134,10 +137,10 @@ void SmartCat::on_listDialogs_currentRowChanged(int currentRow)
 
 void SmartCat::on_bSend_clicked()
 {
-   vk->sendMessage( currentDialog.id(), ui->textMessage->text() );
-   ui->textMessage->setText("");
-   printDataToMessageList();
-   printDataToDialogList();
+    vk->sendMessage( currentDialog.id(), ui->textMessage->text() );
+    ui->textMessage->setText("");
+    printDataToMessageList();
+    printDataToDialogList();
 }
 
 void SmartCat::on_bAdd_clicked()

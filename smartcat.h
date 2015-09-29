@@ -7,20 +7,28 @@
 #include <QTableWidgetItem>
 #include <QThread>
 #include <QPlainTextEdit>
+#include <exception>
+#include <functional>
+#include <iostream>
 #include "smartcatbrowser.h"
 #include "vkAPI/vkapi.h"
 
-namespace Ui {
-class SmartCat;
+namespace Ui
+{
+    class SmartCat;
+    class PollThread;
+    class UI;
 }
 
-class DataThread : public QThread
+class PollThread : public QThread
 {
     Q_OBJECT
+private:
+    QList< int(*)(QString) > queueFunction;
+
 public:
-    QString id;
-    QString startFunction;
     void run();
+    void addQueue(const int(*)(QString) );
 
 signals:
     void done();
@@ -71,7 +79,7 @@ signals:
 
 protected:
     Ui::SmartCat *ui;
-    DataThread *th;
+    PollThread *th;
     vkAPI::VKontakte *vk;
 
 };

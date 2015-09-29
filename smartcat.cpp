@@ -6,7 +6,7 @@ using namespace vkAPI;
 SmartCat::SmartCat(QWidget *parent) : QWidget(parent), ui(new Ui::SmartCat), vk(new VKontakte)
 {
     ui->setupUi(this);
-    th = new DataThread();
+    th = new PollThread();
     ui->listWidget->hide();
 
     appID = "4796858";
